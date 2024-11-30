@@ -113,7 +113,7 @@ sudo python3 compare_two_methods_reorder.py
 ```
 
 4. Dynamic emulation
-5. 
+   
 The scripts to adjust tc netem is original from [https://github.com/akamai/cell-emulation-util](https://github.com/akamai/cell-emulation-util)
 
 I appreciated their work and adjusted the NIC name to fit the condition.
