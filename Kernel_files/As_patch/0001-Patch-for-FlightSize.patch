@@ -1,0 +1,140 @@
+From a0bd0ab3379972827723dd201f15515f9ba5b5b0 Mon Sep 17 00:00:00 2001
+From: zmrui <nobody@nobody.com>
+Date: Fri, 29 Nov 2024 21:45:56 -0600
+Subject: [PATCH] Patch for FlightSize
+
+---
+ net/ipv4/ip_forward.c | 11 +++++++++++
+ net/ipv4/ip_input.c   | 12 ++++++++++++
+ net/ipv4/ip_output.c  | 21 +++++++++++++++++++++
+ net/ipv4/tcp.c        |  3 ++-
+ net/ipv4/tcp_input.c  | 15 ++++++++++++++-
+ 5 files changed, 60 insertions(+), 2 deletions(-)
+
+diff --git a/net/ipv4/ip_forward.c b/net/ipv4/ip_forward.c
+index 00ec819f949b..88a68fca5e3e 100644
+--- a/net/ipv4/ip_forward.c
++++ b/net/ipv4/ip_forward.c
+@@ -64,6 +64,17 @@ static bool ip_exceeds_mtu(const struct sk_buff *skb, unsigned int mtu)
+ 
+ static int ip_forward_finish(struct net *net, struct sock *sk, struct sk_buff *skb)
+ {
++	//added here
++//forward pkt
++	struct iphdr *iph = ip_hdr(skb);
++	if(iph->protocol==IPPROTO_TCP){
++		struct tcphdr *tcph;
++		tcph = (struct tcphdr *)(skb->head + skb->network_header + ip_hdrlen(skb));
++		if(ntohs(tcph->dest)==5001){
++			printk("[2fwp] %u %u %u",ntohl(tcph->seq), skb->data_len, skb->len);
++		}
++	}
++//added above
+ 	struct ip_options *opt	= &(IPCB(skb)->opt);
+ 
+ 	__IP_INC_STATS(net, IPSTATS_MIB_OUTFORWDATAGRAMS);
+diff --git a/net/ipv4/ip_input.c b/net/ipv4/ip_input.c
+index 3a025c011971..ffa5c9e8c175 100644
+--- a/net/ipv4/ip_input.c
++++ b/net/ipv4/ip_input.c
+@@ -227,6 +227,18 @@ static int ip_local_deliver_finish(struct net *net, struct sock *sk, struct sk_b
+ {
+ 	__skb_pull(skb, skb_network_header_len(skb));
+ 
++//added here
++//receiver receive pkt
++	struct iphdr *iph = ip_hdr(skb);
++	if(iph->protocol==IPPROTO_TCP){
++		struct tcphdr *tcph;
++		tcph = (struct tcphdr *)(skb->head + skb->network_header + ip_hdrlen(skb));
++		if(ntohs(tcph->dest)==5001){
++			// printk("[receiver_rcv_pkt] seq:%u data_len:%u",ntohl(tcph->seq), skb->data_len);
++			printk("[rrp] %u %u %u",ntohl(tcph->seq), skb->data_len, skb->len);
++		}
++	}
++//added above
+ 	rcu_read_lock();
+ 	ip_protocol_deliver_rcu(net, skb, ip_hdr(skb)->protocol);
+ 	rcu_read_unlock();
+diff --git a/net/ipv4/ip_output.c b/net/ipv4/ip_output.c
+index 9bca57ef8b83..def3b0b613ab 100644
+--- a/net/ipv4/ip_output.c
++++ b/net/ipv4/ip_output.c
+@@ -112,6 +112,27 @@ int __ip_local_out(struct net *net, struct sock *sk, struct sk_buff *skb)
+ 
+ 	skb->protocol = htons(ETH_P_IP);
+ 
++	//added here
++	//sender send pkt
++	if(iph->protocol==IPPROTO_TCP){
++		struct tcp_sock *tp = (struct tcp_sock *)sk;
++		struct tcphdr *tcph;
++		tcph = (struct tcphdr *)(skb->head + skb->network_header + ip_hdrlen(skb));
++		if(ntohs(tcph->dest)==5001){
++			// printk("[sender_send_pkt] seq:%u data_len:%u",ntohl(tcph->seq), skb->data_len);
++			printk("[+<ssp] %u %u",ntohl(tcph->seq), skb->data_len);
++			struct inet_connection_sock *icsk = inet_csk(sk);
++			// printk("[tcp_ca_state] %u",icsk->icsk_ca_state);
++			printk("[scas] %u",icsk->icsk_ca_state);
++			// printk("[sender_CWND] snd_cwnd:%u snd_ssthresh:%u",tp->snd_cwnd,tp->snd_ssthresh);		
++			printk("[CWND] %u %u",tp->snd_cwnd,tp->snd_ssthresh);				
++			// printk("[sender_flightsize] packets_out:%u retrans_out:%u sacked_out:%u lost_out:%u",tp->packets_out,tp->retrans_out, tp->sacked_out, tp->lost_out);
++			printk("[sf] %u %u %u %u",tp->packets_out,tp->retrans_out, tp->sacked_out, tp->lost_out);
++			printk("[sendertpinfo] reordering:%u reord_seen:%u segs_out:%u app_limited:%u lost:%u srtt_us:%u",tp->reordering,tp->reord_seen, tp->segs_out, tp->app_limited, tp->lost, tp->srtt_us);
++			printk("[+>senderinfo] gso_size:%u skbtruesize:%u tpmss_cache:%u ",skb_shinfo(skb)->gso_size, skb->truesize, tp->mss_cache);
++		}
++	}
++	//added above
+ 	return nf_hook(NFPROTO_IPV4, NF_INET_LOCAL_OUT,
+ 		       net, sk, skb, NULL, skb_dst(skb)->dev,
+ 		       dst_output);
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 2bb28bfd83bf..c32abd039419 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -438,7 +438,8 @@ void tcp_init_sock(struct sock *sk)
+ 	 * initialization of these values.
+ 	 */
+ 	tp->snd_ssthresh = TCP_INFINITE_SSTHRESH;
+-	tp->snd_cwnd_clamp = ~0;
++	// tp->snd_cwnd_clamp = ~0;
++	tp->snd_cwnd_clamp = 90;
+ 	tp->mss_cache = TCP_MSS_DEFAULT;
+ 
+ 	tp->reordering = sock_net(sk)->ipv4.sysctl_tcp_reordering;
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index 0ce46849ec3d..e3c572c1d76e 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -5858,6 +5858,20 @@ void tcp_rcv_established(struct sock *sk, struct sk_buff *skb)
+ 				 * on entry.
+ 				 */
+ 				tcp_ack(sk, skb, 0);
++				//added here
++				//received and finished processing ack
++				if(ntohs(th->source)==5001){
++					// printk("[sreceive_ack] ack_seq:%u",ntohl(th->ack_seq));
++					printk("[+<sra] %u",ntohl(th->ack_seq));
++					struct inet_connection_sock *icsk = inet_csk(sk);
++					// printk("[tcp_ca_state] %u",icsk->icsk_ca_state);
++					// printk("[sender_CWND] snd_cwnd:%u snd_ssthresh:%u",tp->snd_cwnd,tp->snd_ssthresh);
++					// printk("[sender_flightsize] packets_out:%u retrans_out:%u sacked_out:%u lost_out:%u",tp->packets_out,tp->retrans_out, tp->sacked_out, tp->lost_out);
++					printk("[scas] %u",icsk->icsk_ca_state);
++					printk("[CWND] %u %u",tp->snd_cwnd,tp->snd_ssthresh);
++					printk("[+>sf] %u %u %u %u",tp->packets_out,tp->retrans_out, tp->sacked_out, tp->lost_out);
++				}
++				//added above
+ 				__kfree_skb(skb);
+ 				tcp_data_snd_check(sk);
+ 				/* When receiving pure ack in fast path, update
+@@ -5935,7 +5949,6 @@ void tcp_rcv_established(struct sock *sk, struct sk_buff *skb)
+ step5:
+ 	if (tcp_ack(sk, skb, FLAG_SLOWPATH | FLAG_UPDATE_TS_RECENT) < 0)
+ 		goto discard;
+-
+ 	tcp_rcv_rtt_measure_ts(sk, skb);
+ 
+ 	/* Process urgent data. */
+-- 
+2.25.1
+

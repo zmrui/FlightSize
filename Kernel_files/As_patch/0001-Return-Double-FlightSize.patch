@@ -1,0 +1,25 @@
+From a51940ebac92fcd21abb68aa86affe2c08af221f Mon Sep 17 00:00:00 2001
+From: zmrui <nobody@nobody.com>
+Date: Fri, 29 Nov 2024 21:49:37 -0600
+Subject: [PATCH] Return Double FlightSize
+
+---
+ include/net/tcp.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 4da22b41bde6..273e494360b4 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -1202,7 +1202,7 @@ static inline unsigned int tcp_left_out(const struct tcp_sock *tp)
+  */
+ static inline unsigned int tcp_packets_in_flight(const struct tcp_sock *tp)
+ {
+-	return tp->packets_out - tcp_left_out(tp) + tp->retrans_out;
++	return (tp->packets_out - tcp_left_out(tp) + tp->retrans_out) + (tp->packets_out - tcp_left_out(tp) + tp->retrans_out);
+ }
+ 
+ #define TCP_INFINITE_SSTHRESH	0x7fffffff
+-- 
+2.25.1
+
