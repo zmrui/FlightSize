@@ -122,6 +122,10 @@ I appreciated their work and adjusted the NIC name to fit the condition.
 sudo python3 dynamich3.py
 ```
 
+## Results
+
+[Link](https://drive.google.com/file/d/1o2HjVGSpvqCsrQsXlSFoByF36qF4rj9y/view?usp=sharing) to Google Drive.
+
 ## license
 
 GPL-2.0
