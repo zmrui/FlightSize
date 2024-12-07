@@ -18,7 +18,7 @@ def Reorder_Compare_two_methods(cca,rtt, bw,  reorder_percentage_in_10000,reorde
     # reorder_tc_prob = reorder_probility
     maxqsize=1000
     print("maxqsize=",maxqsize)
-    resfolder = os.path.join(Mininet_testbed.utils.config.MN_TESTBED_DIR,'rerorder')
+    resfolder = os.path.join(Mininet_testbed.utils.config.RESULTS_DIR,'rerorder')
     realsub_folder = os.path.join(resfolder,f'{cca}_bw{bw}_rtt{rtt}_reorder{reorder_percentage_in_10000/100}%')
     print(realsub_folder)
 
