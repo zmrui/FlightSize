@@ -5,6 +5,10 @@ This repository contains the source code and experiment scripts for paper "Accur
 ## Instructions
 On Ubuntu 20.04
 
+```
+sudo sysctl -w net.ipv4.ip_forward=1
+```
+
 ### Install build dependencies
 ```
 sudo apt-get update; sudo apt-get install git fakeroot build-essential ncurses-dev xz-utils libssl-dev bc flex libelf-dev bison zstd dwarves vim git iperf3
@@ -81,7 +85,7 @@ sudo PYTHON=python3 mininet/util/install.sh -a
 2. Install python packages
 
 ```
-pip3 install pandas matplotlib
+sudo pip3 install pandas matplotlib
 ```
 
 ### Adjust script config
