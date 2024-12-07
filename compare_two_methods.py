@@ -13,7 +13,7 @@ def Compare_two_methods(cca,rtt, bw, loss,nameprefix="", keep=1):
     # exp_table6_1
     maxqsize=100
     print("maxqsize=",maxqsize)
-    resfolder = os.path.join(Mininet_testbed.utils.config.MN_TESTBED_DIR,'noloss')
+    resfolder = os.path.join(Mininet_testbed.utils.config.RESULTS_DIR,'noloss')
     realsub_folder = os.path.join(resfolder,f'{cca}_bw{bw}_rtt{rtt}_loss{loss/100}%')
     print(realsub_folder)
     
