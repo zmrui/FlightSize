@@ -1,18 +1,18 @@
-From a0bd0ab3379972827723dd201f15515f9ba5b5b0 Mon Sep 17 00:00:00 2001
+From 96383881b43c467571bfe03dad947de608c9260b Mon Sep 17 00:00:00 2001
 From: zmrui <nobody@nobody.com>
-Date: Fri, 29 Nov 2024 21:45:56 -0600
+Date: Tue, 10 Dec 2024 10:53:31 -0600
 Subject: [PATCH] Patch for FlightSize
 
 ---
- net/ipv4/ip_forward.c | 11 +++++++++++
+ net/ipv4/ip_forward.c | 22 +++++++++++++++++++++-
  net/ipv4/ip_input.c   | 12 ++++++++++++
  net/ipv4/ip_output.c  | 21 +++++++++++++++++++++
  net/ipv4/tcp.c        |  3 ++-
- net/ipv4/tcp_input.c  | 15 ++++++++++++++-
- 5 files changed, 60 insertions(+), 2 deletions(-)
+ net/ipv4/tcp_input.c  | 14 ++++++++++++++
+ 5 files changed, 70 insertions(+), 2 deletions(-)
 
 diff --git a/net/ipv4/ip_forward.c b/net/ipv4/ip_forward.c
-index 00ec819f949b..88a68fca5e3e 100644
+index 00ec819f949b..af00b0969a01 100644
 --- a/net/ipv4/ip_forward.c
 +++ b/net/ipv4/ip_forward.c
 @@ -64,6 +64,17 @@ static bool ip_exceeds_mtu(const struct sk_buff *skb, unsigned int mtu)
@@ -33,6 +33,24 @@ index 00ec819f949b..88a68fca5e3e 100644
  	struct ip_options *opt	= &(IPCB(skb)->opt);
  
  	__IP_INC_STATS(net, IPSTATS_MIB_OUTFORWDATAGRAMS);
+@@ -153,7 +164,16 @@ int ip_forward(struct sk_buff *skb)
+ 
+ 	if (net->ipv4.sysctl_ip_fwd_update_priority)
+ 		skb->priority = rt_tos2priority(iph->tos);
+-
++//added here
++//forward pkt
++	if(iph->protocol==IPPROTO_TCP){
++		struct tcphdr *tcph;
++		tcph = (struct tcphdr *)(skb->head + skb->network_header + ip_hdrlen(skb));
++		if(ntohs(tcph->dest)==5001){
++			printk("[1fwp] %u %u %u",ntohl(tcph->seq), skb->data_len, skb->len);
++		}
++	}
++//added above
+ 	return NF_HOOK(NFPROTO_IPV4, NF_INET_FORWARD,
+ 		       net, NULL, skb, skb->dev, rt->dst.dev,
+ 		       ip_forward_finish);
 diff --git a/net/ipv4/ip_input.c b/net/ipv4/ip_input.c
 index 3a025c011971..ffa5c9e8c175 100644
 --- a/net/ipv4/ip_input.c
@@ -103,7 +121,7 @@ index 2bb28bfd83bf..c32abd039419 100644
  
  	tp->reordering = sock_net(sk)->ipv4.sysctl_tcp_reordering;
 diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index 0ce46849ec3d..e3c572c1d76e 100644
+index 0ce46849ec3d..dd036b83378c 100644
 --- a/net/ipv4/tcp_input.c
 +++ b/net/ipv4/tcp_input.c
 @@ -5858,6 +5858,20 @@ void tcp_rcv_established(struct sock *sk, struct sk_buff *skb)
@@ -127,14 +145,5 @@ index 0ce46849ec3d..e3c572c1d76e 100644
  				__kfree_skb(skb);
  				tcp_data_snd_check(sk);
  				/* When receiving pure ack in fast path, update
-@@ -5935,7 +5949,6 @@ void tcp_rcv_established(struct sock *sk, struct sk_buff *skb)
- step5:
- 	if (tcp_ack(sk, skb, FLAG_SLOWPATH | FLAG_UPDATE_TS_RECENT) < 0)
- 		goto discard;
--
- 	tcp_rcv_rtt_measure_ts(sk, skb);
- 
- 	/* Process urgent data. */
 -- 
 2.25.1
-
