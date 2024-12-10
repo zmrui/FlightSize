@@ -17,7 +17,7 @@ sudo apt-get update; sudo apt-get install git fakeroot build-essential ncurses-d
 
 1. Clone the source code tree
 ```
-git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
 cd linux
 ```
 
@@ -29,6 +29,10 @@ git checkout v5.16
 ```
 
 3. Apply patch ```0001-Patch-for-FlightSize.patch``` to the Linux code repo
+```
+cp ../FlightSize/Kernel_files/As_patch/0001-Patch-for-FlightSize.patch 0001-Patch-for-FlightSize.patch
+git apply 0001-Patch-for-FlightSize.patch
+```
 
 ### Adjust kernel config
 
