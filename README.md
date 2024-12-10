@@ -39,6 +39,10 @@ git apply 0001-Patch-for-FlightSize.patch
 1. Copy compile config file from current system
 ```
 cp /boot/config-$(uname -r) .config
+scripts/config --disable SYSTEM_REVOCATION_KEYS
+scripts/config --disable SYSTEM_TRUSTED_KEYS
+scripts/config --disable CONFIG_MODULE_SIG_ALL
+scripts/config --disable CONFIG_MODULE_SIG_KEY
 ```
 
 2. Enlarge the kernel ring buffer size
