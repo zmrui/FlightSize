@@ -193,9 +193,9 @@ class mn_network:
         else:
             topo = MyTopo(rtt=self.rtt,bw=self.bw,maxq=self.maxqsize,loss=self.loss_probility)
 
-        net = Mininet( topo=topo,
-                    host=CPULimitedHost, link=TCLink, xterms=True,
-                    autoStaticArp=True)    
+        net = Mininet( topo=topo)
+                    # host=CPULimitedHost, link=TCLink, xterms=True,
+                    # autoStaticArp=True)    
 
         net.start()
         h1, h2, h3 = net.getNodeByName('h1', 'h2', 'h3')
