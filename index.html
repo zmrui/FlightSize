@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="google-site-verification" content="vxzwfyRoPwATFk9d7GrcuZtyElcm4SyCMYLHqzlacD8" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NECC: Toward Non-Expert Customized Congestion Control</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Use the Inter font family */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased">
+
+    <!-- Main container -->
+    <div class="container mx-auto max-w-4xl px-4 py-8 md:py-16">
+
+        <!-- Header Section -->
+        <header class="text-center mb-10">
+            <p class="text-lg font-medium text-indigo-600 mb-2">Accepted by International Conference on Computing, Networking and Communications (ICNC) 2025</p>
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
+                Accuracy Evaluation of TCP FlightSize Estimation: Analytical and Experimental Study
+            </h1>
+        </header>
+
+        <!-- Main Content Section -->
+        <main>
+            <!-- Abstract Section -->
+            <div class="bg-white p-8 rounded-xl shadow-md border border-gray-200 mb-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Abstract</h2>
+                <p class="text-lg text-gray-700 leading-relaxed">
+                    One critical piece of information required by a TCP connection is FlightSize, which is the total amount of outstanding data contributed by the connection to the network. The FlightSize information must be estimated by a TCP connection. Recent studies have found its inaccuracy phenomenon during TCP congestion control behavior modeling, and others have amplified its inaccuracy for congestion control algorithm (CCA) identification. However, they did not study what and how each factor impacts the estimation accuracy. In this paper, we present, to the best of our knowledge, the first analytical and experimental study on the accuracy of the TCP FlightSize estimation method. Our contributions are two-fold. 1) We design and develop two FlightSize evaluation platforms using different data sources with mutually corroborated results to obtain ground truth (i.e., accurate FlightSize) in various network conditions and evaluate the accuracy of TCP FlightSize estimation. 2) We analytically and experimentally study how different network factors, such as network bandwidth, network delay, packet loss, and packet reordering, affect the accuracy of TCP FlightSize estimation. Our findings benefit the networking community by facilitating the development of more accurate TCP FlightSize estimation methods and more robust TCP congestion control algorithms that account for inherent estimation inaccuracies.
+                </p>
+            </div>
+
+            <!-- GitHub Link and Description -->
+            <div class="bg-white p-8 rounded-xl shadow-md border border-gray-200 mb-8">
+                <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                    This repository contains the source code and experiment scripts for the paper "Accuracy Evaluation of TCP FlightSize Estimation: Analytical and Experimental Study".
+                </p>
+                <a href="https://github.com/zmrui/FlightSize" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center w-full sm:w-auto px-6 py-3 bg-gray-800 text-white font-semibold rounded-lg hover:bg-gray-900 transition-colors duration-300 shadow-sm">
+                    <!-- SVG for GitHub Icon -->
+                    <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.168 6.839 9.492.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.378.203 2.398.1 2.65.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd" />
+                    </svg>
+                    View on GitHub
+                </a>
+            </div>
+
+            <!-- Citation Section -->
+            <div class="bg-white p-8 rounded-xl shadow-md border border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Citation</h2>
+                <blockquote class="text-gray-600 border-l-4 border-indigo-200 pl-4 italic">
+                    <p>
+                        M. Zhang, P. Ha, H. Bagheri and L. Xu, "Accuracy Evaluation of TCP FlightSize Estimation: Analytical and Experimental Study," 2025 International Conference on Computing, Networking and Communications (ICNC), Honolulu, HI, USA, 2025, pp. 687-693.
+                    </p>
+                </blockquote>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="text-center mt-12 text-gray-500">
+            <p>&copy; 2025 Mingrui Zhang.</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>
