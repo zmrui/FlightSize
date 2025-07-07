@@ -1,4 +1,4 @@
-# FlightSize
+# Accuracy Evaluation of TCP FlightSize Estimation: Analytical and Experimental Study
 
 This repository contains the source code and experiment scripts for the paper "Accuracy Evaluation of TCP FlightSize Estimation: Analytical and Experimental Study" published in the International Conference on Computing, Networking and Communications (ICNC) 2025 [Link](http://www.conf-icnc.org/2025/papers/p677-zhang.pdf).
 
