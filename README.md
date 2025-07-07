@@ -138,6 +138,13 @@ sudo python3 dynamich3.py
 
 [Link](https://drive.google.com/file/d/1o2HjVGSpvqCsrQsXlSFoByF36qF4rj9y/view?usp=sharing) to Google Drive.
 
+## Citation
+
+If you find this work helpful, please consider citing our paper
+```
+M. Zhang, P. Ha, H. Bagheri and L. Xu, "Accuracy Evaluation of TCP FlightSize Estimation: Analytical and Experimental Study," 2025 International Conference on Computing, Networking and Communications (ICNC), Honolulu, HI, USA, 2025, pp. 687-693
+```
+
 ## license
 
 GPL-2.0
